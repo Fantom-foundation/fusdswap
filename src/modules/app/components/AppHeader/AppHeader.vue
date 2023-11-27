@@ -1,6 +1,5 @@
 <script setup>
 import WalletButtonC from '@/modules/wallet/components/WalletButtonC/WalletButtonC.vue';
-import SocialMediaLinks from '@/modules/app/components/SocialMediaLinks/SocialMediaLinks.vue';
 import DarkThemeSwitch from '@/modules/app/components/DarkThemeSwitch/DarkThemeSwitch.vue';
 </script>
 
@@ -9,11 +8,10 @@ import DarkThemeSwitch from '@/modules/app/components/DarkThemeSwitch/DarkThemeS
         <div class="appheader_left">
             <div class="appheader_logo">
                 <a href="https://fantom.foundation/" target="_blank" rel="nofollow" title="Fantom Foundation">
-                    <img src="/fantom-logo.svg" alt="Fantom logo" data-testid="logo" />
+                    <img src="/fantom-logo-blue.svg" alt="Fantom logo" data-testid="logo" />
                 </a>
             </div>
             <!--            <div class="appheader_separator">&nbsp;</div>-->
-            <SocialMediaLinks />
         </div>
         <div class="appheader_right">
             <DarkThemeSwitch />
@@ -30,9 +28,8 @@ import DarkThemeSwitch from '@/modules/app/components/DarkThemeSwitch/DarkThemeS
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--f-color-primary-5);
-    padding: var(--f-spacer-2) var(--f-spacer-2) var(--f-spacer-2) var(--f-spacer-3);
-    //padding: 0 var(--f-spacer-3) 0 var(--f-spacer-3);
+    //padding: var(--f-spacer-2) var(--f-spacer-2) var(--f-spacer-2) var(--f-spacer-3);
+    padding: var(--f-spacer-2) 0;
     gap: var(--f-spacer-5);
 
     &_left {
@@ -49,7 +46,7 @@ import DarkThemeSwitch from '@/modules/app/components/DarkThemeSwitch/DarkThemeS
     &_logo {
         img {
             display: block;
-            max-height: var(--f-spacer-6);
+            max-height: 32px;
         }
     }
 
@@ -64,8 +61,6 @@ import DarkThemeSwitch from '@/modules/app/components/DarkThemeSwitch/DarkThemeS
 
 :root.theme-dark {
     .appheader {
-        background: var(--theme-dark-color-6);
-
         &_separator {
             background: var(--f-color-grey-1);
             opacity: 0.2;

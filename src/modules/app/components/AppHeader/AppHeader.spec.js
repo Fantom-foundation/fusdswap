@@ -19,12 +19,6 @@ describe('AppHeader', () => {
         expect(wrapper.findByTestId('logo').exists()).toBe(true);
     });
 
-    it('should show social media links', () => {
-        wrapper = createWrapper();
-
-        expect(wrapper.findComponent({ name: 'SocialMediaLinks' }).exists()).toBe(true);
-    });
-
     it('should display wallet button', () => {
         wrapper = createWrapper();
 

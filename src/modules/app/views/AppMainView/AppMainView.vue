@@ -6,6 +6,7 @@ import { ref, watch } from 'vue';
 import { reloadAppMainViewSwitcher } from '@/modules/app/helpers.js';
 import { FCard, getUniqueId } from 'fantom-vue3-components';
 import SwapFormC from '@/modules/app/components/SwapFormC/SwapFormC.vue';
+import SocialMediaLinks from '@/modules/app/components/SocialMediaLinks/SocialMediaLinks.vue';
 
 const { address: accountAddress } = storeToRefs(useWalletStore());
 const key = ref(getUniqueId());
@@ -34,18 +35,21 @@ function onSwapFinished() {
                 <SwapFormC @swap-finished="onSwapFinished" :key="key" />
             </FCard>
         </main>
+        <footer>
+            <SocialMediaLinks />
+        </footer>
     </div>
 </template>
 
 <style lang="scss">
 .appmainview {
-    main {
+    &.main {
         max-width: 940px;
         margin: 0 auto;
-        padding: var(--f-spacer-7) var(--f-spacer-4);
+        padding: 0 var(--f-spacer-4) var(--f-spacer-7) var(--f-spacer-4);
 
         h1 {
-            margin-top: 0;
+            //margin-top: 0;
             text-align: center;
         }
     }
@@ -53,6 +57,10 @@ function onSwapFinished() {
     &_swapform {
         max-width: 480px;
         margin: var(--f-spacer-7) auto 0 auto;
+    }
+
+    footer {
+        padding-top: var(--f-spacer-8);
     }
 }
 </style>

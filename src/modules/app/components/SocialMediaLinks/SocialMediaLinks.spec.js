@@ -1,20 +1,19 @@
 import { mount } from '@vue/test-utils';
-import { describe, it, afterEach, expect } from 'vitest';
 import { destroyWrapper } from 'fantom-vue3-components/src/test/utils.js';
-import SocialMediaLinks from '@/modules/app/components/SocialMediaLinks/SocialMediaLinks.vue';
+import SocialMediaLinks from './SocialMediaLinks.vue';
+
+let wrapper = null;
 
 function createWrapper(options = {}) {
     return mount(SocialMediaLinks, options);
 }
-
-let wrapper = null;
 
 afterEach(() => {
     destroyWrapper(wrapper);
 });
 
 describe('SocialMediaLinks', () => {
-    it('should match snapshot', () => {
+    it('should match snapshot', async () => {
         wrapper = createWrapper();
 
         expect(wrapper.element).toMatchSnapshot();

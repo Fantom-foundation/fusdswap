@@ -1,9 +1,30 @@
+import { appConfig } from '@/config/app-config.js';
+import { swapTokenForFUsd } from '@/utils/tx/swap.js';
+
+export function USDCe_TOKEN() {
+    return {
+        symbol: 'USDC.e',
+        logo: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=002',
+        decimals: 6,
+        address: '0x2F733095B80A04b38b0D10cC884524a3d09b836a',
+    };
+}
+
 export function DAI_TOKEN() {
     return {
         symbol: 'DAI',
         logo: 'https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.svg?v=024',
         decimals: 18,
         address: '0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E',
+    };
+}
+
+export function USDC_TOKEN() {
+    return {
+        symbol: 'USDC',
+        logo: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=002',
+        decimals: 6,
+        address: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
     };
 }
 
@@ -32,4 +53,28 @@ export function WFTM_TOKEN() {
         decimals: 18,
         address: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
     };
+}
+
+export const DAI_SWAP_CONTRACT = '0xBca5E7bCE998e084e06a37d2Cfa89980941D5fDD';
+export const USDC_SWAP_CONTRACT = '0xBca5E7bCE998e084e06a37d2Cfa89980941D5fDD';
+
+export function getTokenConfig() {
+    const swapTokenSymbol = appConfig.flags.swapTokenSymbol;
+    const config = {
+        swapContract: '',
+        token: {},
+        swapTokenForFUsd: null,
+    };
+
+    if (swapTokenSymbol === 'DAI') {
+        config.swapContract = DAI_SWAP_CONTRACT;
+        config.token = DAI_TOKEN();
+        config.swapTokenForFUsd = swapTokenForFUsd;
+    } else if (swapTokenSymbol === 'USDC.e') {
+        config.swapContract = USDC_SWAP_CONTRACT;
+        config.token = USDCe_TOKEN();
+        config.swapTokenForFUsd = swapTokenForFUsd;
+    }
+
+    return config;
 }

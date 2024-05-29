@@ -5,9 +5,8 @@ import { WalletMock } from '@/modules/wallet/test-helpers.js';
 import { TEST_ACCOUNT_ADDRESS } from '@/plugins/web3-wallets/test-helpers.js';
 import { delay, useApi } from 'fantom-vue3-components';
 import { i18n } from '@/config/i18n.js';
-import { DAI_TOKEN } from '@/config/tokens.js';
-import { DAI_SWAP_CONTRACT } from '@/modules/app/constants/index.js';
-import { swapDAIForFUsd } from '@/utils/tx/swap.js';
+import { DAI_SWAP_CONTRACT, DAI_TOKEN } from '@/config/tokens.js';
+import { swapTokenForFUsd } from '@/utils/tx/swap.js';
 
 const api = useApi().api;
 let wrapper = null;
@@ -19,7 +18,7 @@ function createWrapper(
             address: TEST_ACCOUNT_ADDRESS,
             fromToken: DAI_TOKEN(),
             contractAddress: DAI_SWAP_CONTRACT,
-            swapTokenForFUsd: swapDAIForFUsd,
+            swapTokenForFUsd: swapTokenForFUsd,
             wallet: walletMock,
             checkContractFUSDBalance: false,
         },

@@ -7,7 +7,8 @@ import { reloadAppMainViewSwitcher } from '@/modules/app/helpers.js';
 import { FCard, getUniqueId } from 'fantom-vue3-components';
 import SwapFormC from '@/modules/app/components/SwapFormC/SwapFormC.vue';
 import SocialMediaLinks from '@/modules/app/components/SocialMediaLinks/SocialMediaLinks.vue';
-import { getTokenConfig } from '@/modules/app/constants/index.js';
+
+import { getTokenConfig } from '@/config/tokens.js';
 
 const { address: accountAddress } = storeToRefs(useWalletStore());
 const key = ref(getUniqueId());
@@ -27,9 +28,9 @@ function onSwapFinished() {
     <div class="appmainview main">
         <AppHeader />
         <main>
-            <h1>{{ $t('app.appMainView.heading') }}</h1>
+            <h1>{{ $t('app.appMainView.heading', { tokenSymbol: tokenConfig.token.symbol }) }}</h1>
             <p class="tea-center">
-                {{ $t('app.appMainView.text1') }}
+                {{ $t('app.appMainView.text1', { tokenSymbol: tokenConfig.token.symbol }) }}
                 <br />
                 {{ $t('app.appMainView.text2') }}
             </p>

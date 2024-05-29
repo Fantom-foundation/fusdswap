@@ -1,6 +1,6 @@
 import { encodeFunctionData } from './encodeFunctionData/encodeFunctionData.js';
 
-export function swapDAIForFUsd(amount, contractAddress) {
+export function swapTokenForFUsd(amount, contractAddress) {
     return {
         to: contractAddress,
         value: '0x0',

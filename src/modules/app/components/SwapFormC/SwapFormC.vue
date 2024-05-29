@@ -83,7 +83,7 @@ const cFUsdBalance = computed(() => {
 });
 
 async function allow({ amount, tokenAddress, address }) {
-    buttonLabel.value = t('app.swapForm.approving');
+    buttonLabel.value = t('app.swapForm.approving', { tokenSymbol: props.fromToken.symbol });
 
     await wallet.sendTransaction({
         transaction: {

@@ -1,12 +1,14 @@
 import { FANTOM_MAINNET, FANTOM_TESTNET } from './fantom-chain.js';
 
+const TOKEN_SYMBOL = 'USDC.e'; // 'USDC.e' | 'DAI'
+
 const mainConfig = {
     // app main title
     title: 'fUSD swap',
     // app description
-    description: 'swap DAI for fUSD',
+    description: `swap ${TOKEN_SYMBOL} for fUSD`,
     // app keywords
-    keywords: 'Fantom, fUDS, DAI, swap',
+    keywords: `Fantom, fUDS, ${TOKEN_SYMBOL}, swap`,
     // app code
     code: 'fusdswap',
     // default chain id
@@ -50,7 +52,7 @@ const mainConfig = {
         name: 'fUSD swap',
         categories: ['finance'],
         mainColor: '#ffffff',
-        description: 'swap DAI for fUSD',
+        description: `swap ${TOKEN_SYMBOL} for fUSD`,
         assetsVersion: '1',
     },
     locales: [{ tag: 'en', label: 'English' }],
@@ -96,7 +98,7 @@ const mainConfig = {
     defaultTheme: 'theme-dark',
     oneAccountMode: true,
     flags: {
-        swapTokenSymbol: 'DAI',
+        swapTokenSymbol: TOKEN_SYMBOL,
     },
     // this object is set by calling `setEnv` function
     env: {

@@ -1,9 +1,8 @@
 import { encodeFunctionData } from './encodeFunctionData/encodeFunctionData.js';
-import { SWAP_CONTRACT } from '@/modules/app/constants/index.js';
 
-export function swapDAIForFUsd(amount) {
+export function swapDAIForFUsd(amount, contractAddress) {
     return {
-        to: SWAP_CONTRACT,
+        to: contractAddress,
         value: '0x0',
         data: encodeFunctionData(
             {

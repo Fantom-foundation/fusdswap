@@ -7,9 +7,11 @@ import { reloadAppMainViewSwitcher } from '@/modules/app/helpers.js';
 import { FCard, getUniqueId } from 'fantom-vue3-components';
 import SwapFormC from '@/modules/app/components/SwapFormC/SwapFormC.vue';
 import SocialMediaLinks from '@/modules/app/components/SocialMediaLinks/SocialMediaLinks.vue';
+import { getTokenConfig } from '@/modules/app/constants/index.js';
 
 const { address: accountAddress } = storeToRefs(useWalletStore());
 const key = ref(getUniqueId());
+const tokenConfig = getTokenConfig();
 
 watch(accountAddress, () => {
     reloadAppMainViewSwitcher();
@@ -32,7 +34,13 @@ function onSwapFinished() {
                 {{ $t('app.appMainView.text2') }}
             </p>
             <FCard class="appmainview_swapform">
-                <SwapFormC @swap-finished="onSwapFinished" :key="key" />
+                <SwapFormC
+                    :contract-address="tokenConfig.swapContract"
+                    :from-token="tokenConfig.token"
+                    :swap-token-for-f-usd="tokenConfig.swapTokenForFUsd"
+                    @swap-finished="onSwapFinished"
+                    :key="key"
+                />
             </FCard>
         </main>
         <footer>

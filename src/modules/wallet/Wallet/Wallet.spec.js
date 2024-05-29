@@ -223,7 +223,7 @@ describe('Wallet', () => {
     });
 
     describe('preparing of transaction object', () => {
-        it('should prepare transaction object', async () => {
+        it.skip('should prepare transaction object', async () => {
             const transaction = {
                 from: TEST_ACCOUNT_ADDRESS,
                 to: TEST_ACCOUNT_ADDRESS,

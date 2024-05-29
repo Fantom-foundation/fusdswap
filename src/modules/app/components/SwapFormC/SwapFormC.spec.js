@@ -4,8 +4,10 @@ import SwapFormC from './SwapFormC.vue';
 import { WalletMock } from '@/modules/wallet/test-helpers.js';
 import { TEST_ACCOUNT_ADDRESS } from '@/plugins/web3-wallets/test-helpers.js';
 import { delay, useApi } from 'fantom-vue3-components';
-import { erc20TokenBalanceData } from '@/modules/account/api/queries/account-balance/mock/account-balance.js';
 import { i18n } from '@/config/i18n.js';
+import { DAI_TOKEN } from '@/config/tokens.js';
+import { DAI_SWAP_CONTRACT } from '@/modules/app/constants/index.js';
+import { swapDAIForFUsd } from '@/utils/tx/swap.js';
 
 const api = useApi().api;
 let wrapper = null;
@@ -15,6 +17,9 @@ function createWrapper(
     options = {
         props: {
             address: TEST_ACCOUNT_ADDRESS,
+            fromToken: DAI_TOKEN(),
+            contractAddress: DAI_SWAP_CONTRACT,
+            swapTokenForFUsd: swapDAIForFUsd,
             wallet: walletMock,
             checkContractFUSDBalance: false,
         },
@@ -22,12 +27,6 @@ function createWrapper(
 ) {
     return mount(SwapFormC, { ...options, attachTo: document.body });
 }
-
-beforeAll(() => {
-    api.fakeData('getErc20TokenBalance', () => {
-        return erc20TokenBalanceData('0x4563918244F40000'); // 5
-    });
-});
 
 afterAll(() => {
     api.restoreAllDataFakes();
@@ -97,6 +96,7 @@ describe('SwapFormC', () => {
         await delay();
         await wrapper.setFormElement('fromTokenAmount', 1);
         await wrapper.submitForm();
+        await delay();
 
         expect(wrapper.findByTestId('swapform_submit_button').text()).toContain(i18n.t('app.swapForm.swapping'));
     });
@@ -107,6 +107,7 @@ describe('SwapFormC', () => {
         await delay();
         await wrapper.setFormElement('fromTokenAmount', 2);
         await wrapper.submitForm();
+        await delay();
 
         expect(wrapper.findByTestId('swapform_submit_button').text()).toContain(i18n.t('app.swapForm.approving'));
     });

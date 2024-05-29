@@ -221,19 +221,27 @@ export class Wallet extends EventsMixin() {
     }
 
     async getNonce(address = '') {
-        return this.#api ? this.#api.query.getNonce(address).dataPromise : null;
+        return this.#api ? this.#api.query.getNonce(address) : null;
+        // return this.#api ? this.#api.query.getNonce(address).dataPromise : null;
     }
 
     async getGasPrice() {
-        return this.#api ? this.#api.query.getGasPrice().dataPromise : null;
+        return this.#api ? this.#api.query.getGasPrice() : null;
+        // return this.#api ? this.#api.query.getGasPrice().dataPromise : null;
     }
 
     async getEstimateGas(transaction = {}) {
-        return this.#api ? this.#api.query.getEstimateGas(transaction).dataPromise : null;
+        return this.#api
+            ? this.#api.query.getEstimateGas(transaction)
+            : // ? this.#api.query.getEstimateGas(transaction).dataPromise
+              null;
     }
 
     async getTransactionStatus(transactionHash) {
-        return this.#api ? this.#api.query.getTransactionStatus(transactionHash).dataPromise : null;
+        return this.#api
+            ? this.#api.query.getTransactionStatus(transactionHash)
+            : // ? this.#api.query.getTransactionStatus(transactionHash).dataPromise
+              null;
     }
 
     /**

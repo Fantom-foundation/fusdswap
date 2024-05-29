@@ -1,6 +1,6 @@
 import { useApi } from 'fantom-vue3-components';
-import { getAccountBalance } from './queries/account-balance/mock/account-balance.js';
+import { getBalance } from '@/modules/account/api/queries/balance/mock/balance.js';
 
 const api = useApi().api;
 
-api.registerQueryMock(getAccountBalance, 'getAccountBalance');
+api.registerQueryMock(getBalance, 'getBalance');

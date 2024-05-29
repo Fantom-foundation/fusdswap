@@ -1,11 +1,11 @@
 import { useApi } from 'fantom-vue3-components';
-import { getAccountBalance } from './queries/account-balance/account-balance.js';
+import { getBalance } from '@/modules/account/api/queries/balance/balance.js';
 
 const api = useApi().api;
 
-api.registerQuery(getAccountBalance, 'getAccountBalance');
+api.registerQuery(getBalance, 'getBalance');
 
 /**
  * @typedef {Object} AccountsApiQueries
- * @property {function(address: string)} getAccountBalance
+ * @property {function(address: string, erc20Address: string)} getBalance
  */

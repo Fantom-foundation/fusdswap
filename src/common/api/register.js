@@ -1,12 +1,12 @@
 import { useApi } from 'fantom-vue3-components';
 import { sendTransaction } from './mutations/send-transaction/send-transaction.js';
-import { getTokenAllowance } from './queries/token-allowance/token-allowance.js';
+import { getAllowance } from '@/common/api/queries/allowance/allowance.js';
 
 const api = useApi().api;
 
 api.registerMutation(sendTransaction, 'sendTransaction');
 
-api.registerQuery(getTokenAllowance, 'getTokenAllowance');
+api.registerQuery(getAllowance, 'getAllowance');
 
 /**
  * @typedef {Object} CommonApiMutations
@@ -15,5 +15,5 @@ api.registerQuery(getTokenAllowance, 'getTokenAllowance');
 
 /**
  * @typedef {Object} CommonApiQueries
- * @property {function({ownerAddress: string, tokenAddress: string, disabled?: boolean}?)} getTokenAllowance
+ * @property {function(ownerAddress: string, tokenAddress: string, spenderAddress: string)} getAllowance
  */

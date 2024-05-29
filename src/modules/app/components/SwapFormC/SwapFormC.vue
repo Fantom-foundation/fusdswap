@@ -1,15 +1,13 @@
 <script setup>
 import SwapForm from '@/modules/app/components/SwapForm/SwapForm.vue';
-import { DAI_TOKEN, FUSD_TOKEN } from '@/config/tokens.js';
+import { FUSD_TOKEN } from '@/config/tokens.js';
 import { useWallet } from '@/modules/wallet/index.js';
 import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useWalletStore } from '@/modules/wallet/store.js';
 import { useApi, FMessage } from 'fantom-vue3-components';
-import { swapDAIForFUsd } from '@/utils/tx/swap.js';
 import { toBigNumber } from '@/utils/big-number/big-number.js';
 import { approve } from '@/utils/tx/allowance.js';
-import { SWAP_CONTRACT } from '@/modules/app/constants/index.js';
 import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits(['swap-finished']);
@@ -18,6 +16,19 @@ const props = defineProps({
     address: {
         type: String,
         default: '',
+    },
+    fromToken: {
+        type: Object,
+        default() {
+            return {};
+        },
+    },
+    contractAddress: {
+        type: String,
+        default: '',
+    },
+    swapTokenForFUsd: {
+        default: null,
     },
     wallet: {
         default: null,
@@ -30,7 +41,6 @@ const props = defineProps({
 
 const api = useApi().api;
 const t = useI18n().t;
-const DAI = DAI_TOKEN();
 const FUSD = FUSD_TOKEN();
 let swapArgs = null;
 const wallet = props.wallet || useWallet().wallet;
@@ -38,41 +48,21 @@ const txStatus = ref({});
 const buttonLabel = ref('');
 const notEnoughFUSD = ref(false);
 const loading = ref(false);
+const loadingBalances = ref(false);
+const tokenBalance = ref('0x0');
+const fusdBalance = ref('0x0');
 const { address: accountAddress } = storeToRefs(useWalletStore());
 const cAddress = computed(() => props.address || accountAddress.value);
 
 const cDisplayMetamaskButton = computed(() => !cAddress.value);
 
-const {
-    data: daiBalance,
-    loading: daiBalanceLoading,
-    enabled: daiBalanceEnabled,
-} = api.query.getAccountBalance(cAddress, DAI.address);
-
-const {
-    data: fusdBalance,
-    loading: fusdBalanceLoading,
-    enabled: fusdBalanceEnabled,
-} = api.query.getAccountBalance(cAddress, FUSD.address);
-
-const { data: daiTokenAllowance, enabled: daiTokenAllowanceEnabled } = api.query.getTokenAllowance({
-    ownerAddress: cAddress,
-    tokenAddress: DAI.address,
-    spenderAddress: SWAP_CONTRACT,
-});
-
 const cDisabled = computed(
-    () =>
-        !cAddress.value ||
-        daiBalanceLoading.value ||
-        fusdBalanceLoading.value ||
-        txStatus.value.status === 'pending' ||
-        loading.value
+    () => !cAddress.value || loadingBalances.value || txStatus.value.status === 'pending' || loading.value
 );
-const cDaiBalance = computed(() => {
-    let balance = daiBalance.value || '0x0';
+const cTokenBalance = computed(() => {
+    let balance = tokenBalance.value;
 
-    if (daiBalanceLoading.value) {
+    if (loadingBalances.value) {
         balance = '';
     } else if (!cAddress.value) {
         balance = '0x0';
@@ -81,9 +71,9 @@ const cDaiBalance = computed(() => {
     return balance;
 });
 const cFUsdBalance = computed(() => {
-    let balance = fusdBalance.value || '0x0';
+    let balance = fusdBalance.value;
 
-    if (fusdBalanceLoading.value) {
+    if (loadingBalances.value) {
         balance = '';
     } else if (!cAddress.value) {
         balance = '0x0';
@@ -92,22 +82,12 @@ const cFUsdBalance = computed(() => {
     return balance;
 });
 
-daiBalanceEnabled.value = !!cAddress.value;
-fusdBalanceEnabled.value = !!cAddress.value;
-daiTokenAllowanceEnabled.value = !!cAddress.value;
-
-watch(cAddress, (address) => {
-    daiBalanceEnabled.value = !!address;
-    fusdBalanceEnabled.value = !!address;
-    daiTokenAllowanceEnabled.value = !!address;
-});
-
 async function allow({ amount, tokenAddress, address }) {
     buttonLabel.value = t('app.swapForm.approving');
 
     await wallet.sendTransaction({
         transaction: {
-            ...approve(amount, tokenAddress),
+            ...approve(amount, tokenAddress, props.contractAddress),
             from: address,
         },
         code: 'allow',
@@ -120,7 +100,7 @@ async function swap({ amount, address }) {
 
     await wallet.sendTransaction({
         transaction: {
-            ...swapDAIForFUsd(amount),
+            ...props.swapTokenForFUsd(amount, props.contractAddress),
             from: address,
         },
         code: 'swap',
@@ -128,8 +108,28 @@ async function swap({ amount, address }) {
     });
 }
 
+async function getBalances(address) {
+    loadingBalances.value = true;
+
+    const [fromTokenBalance, fusdBalance] = await Promise.all([
+        api.query.getBalance(address, props.fromToken.address),
+        api.query.getBalance(address, FUSD.address),
+    ]);
+
+    loadingBalances.value = false;
+
+    return {
+        fromTokenBalance,
+        fusdBalance,
+    };
+}
+
+async function getAllowance(address) {
+    return await api.query.getAllowance(address, props.fromToken.address, props.contractAddress);
+}
+
 async function getContractFUSDBalance() {
-    return api.query.getAccountBalance(SWAP_CONTRACT, FUSD.address).dataPromise;
+    return api.query.getBalance(props.contractAddress, FUSD.address);
 }
 
 async function onSubmit(values) {
@@ -140,9 +140,10 @@ async function onSubmit(values) {
     if (props.checkContractFUSDBalance && toBigNumber(await getContractFUSDBalance()).isLessThan(amount)) {
         notEnoughFUSD.value = true;
     } else {
+        const tokenAllowance = await getAllowance(cAddress.value);
         notEnoughFUSD.value = false;
 
-        if (toBigNumber(daiTokenAllowance.value).isLessThan(amount)) {
+        if (toBigNumber(tokenAllowance).isLessThan(amount)) {
             swapArgs = {
                 amount,
                 address: cAddress.value,
@@ -150,7 +151,7 @@ async function onSubmit(values) {
 
             await allow({
                 amount,
-                tokenAddress: DAI.address,
+                tokenAddress: props.fromToken.address,
                 address: cAddress.value,
             });
         } else {
@@ -163,6 +164,25 @@ async function onSubmit(values) {
 
     loading.value = false;
 }
+
+async function onAddressChange(address) {
+    if (address) {
+        const balances = await getBalances(address);
+
+        tokenBalance.value = balances.fromTokenBalance;
+        fusdBalance.value = balances.fusdBalance;
+    }
+
+    notEnoughFUSD.value = false;
+}
+
+watch(
+    cAddress,
+    async (address) => {
+        onAddressChange(address);
+    },
+    { immediate: true }
+);
 
 watch(txStatus, (ts) => {
     if (ts.status === 'rejected' || ts.status === 'error') {
@@ -181,7 +201,7 @@ watch(txStatus, (ts) => {
 
 <template>
     <SwapForm
-        :from-token="{ ...DAI, balance: cDaiBalance }"
+        :from-token="{ ...props.fromToken, balance: cTokenBalance }"
         :to-token="{ ...FUSD, balance: cFUsdBalance }"
         :disabled="cDisabled"
         :loading="txStatus.status === 'pending' || loading"

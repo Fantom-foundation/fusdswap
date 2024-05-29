@@ -1,7 +1,6 @@
 import { encodeFunctionData } from './encodeFunctionData/encodeFunctionData.js';
-import { SWAP_CONTRACT } from '@/modules/app/constants/index.js';
 
-export function approve(amount, tokenAddress) {
+export function approve(amount, tokenAddress, contractAddress) {
     return {
         to: tokenAddress,
         value: '0x0',
@@ -16,7 +15,7 @@ export function approve(amount, tokenAddress) {
                 stateMutability: 'nonpayable',
                 type: 'function',
             },
-            [SWAP_CONTRACT, amount]
+            [contractAddress, amount]
         ),
     };
 }

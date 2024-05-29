@@ -19,11 +19,11 @@ const mainConfig = {
         fantom: {
             // list of providers. if one of them is unavailable, another is randomly picked
             providers: [
-                /*{
+                {
                     http: 'https://xapi-nodea.fantom.network/',
                     // for subscriptions
                     ws: '',
-                },*/
+                },
                 {
                     http: 'https://xapi-nodeb.fantom.network/',
                     // for subscriptions
@@ -36,16 +36,6 @@ const mainConfig = {
                 },
                 {
                     http: 'https://xapi-noded.fantom.network/',
-                    // for subscriptions
-                    ws: '',
-                },
-                {
-                    http: 'https://xapi-nodee.fantom.network/',
-                    // for subscriptions
-                    ws: '',
-                },
-                {
-                    http: 'https://xapi-nodef.fantom.network/',
                     // for subscriptions
                     ws: '',
                 },
@@ -105,6 +95,9 @@ const mainConfig = {
     themes: ['theme-default', 'theme-dark'],
     defaultTheme: 'theme-dark',
     oneAccountMode: true,
+    flags: {
+        swapTokenSymbol: 'DAI',
+    },
     // this object is set by calling `setEnv` function
     env: {
         mockingEnabled: false,

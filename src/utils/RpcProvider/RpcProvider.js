@@ -137,7 +137,9 @@ export class RpcProvider {
     }
 
     #getBigNumber(ret) {
-        return ret?._hex || '0x0';
+        const hex = ret?._hex;
+
+        return hex ? toHex(hex) : '0x0';
     }
 
     #getContract(contractAddress, abi) {

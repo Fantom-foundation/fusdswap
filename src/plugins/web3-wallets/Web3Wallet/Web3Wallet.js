@@ -78,7 +78,10 @@ export class Web3Wallet extends EventsMixin() {
     }
 
     async _disconnect() {
-        await this.triggerEvent({ name: 'disconnected' });
+        await this.triggerEvent({
+            name: 'disconnected',
+            address: this.address,
+        });
     }
 
     /**

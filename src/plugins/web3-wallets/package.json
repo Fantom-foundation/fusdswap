@@ -6,6 +6,7 @@
     "@ledgerhq/hw-transport-u2f": "^5.36.0-deprecated",
     "@ledgerhq/hw-transport-webhid": "^6.27.8",
     "@metamask/detect-provider": "^2.0.0",
+    "@web3modal/ethers5": "^4.2.3",
     "fantom-clientjs-utils": "github:skavel/Fantom_ClientJS_Utils"
   }
 }

@@ -9,6 +9,7 @@ export const useAccountsStore = defineStore('accounts', {
         return {
             ...accountsStoreUtils.useInLocalStorage('accounts', []),
             ...accountsStoreUtils.useInLocalStorage('activeAccountAddress', ''),
+            ...accountsStoreUtils.useInLocalStorage('w3mUsed', false),
         };
     },
 });

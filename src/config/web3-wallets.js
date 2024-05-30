@@ -1,3 +1,6 @@
+import { appConfig } from '@/config/app-config.js';
+import { chains } from '@/config/chains.js';
+
 export const SOFTWARE_WALLET_POPUP_ID = 'software-wallet-popup';
 export const LEDGER_TRANSACTION_POPUP_ID = 'ledger-transaction-popup';
 
@@ -8,6 +11,21 @@ export const LEDGER_TRANSACTION_POPUP_ID = 'ledger-transaction-popup';
  * @constructor
  */
 export function WEB3_WALLETS() {
+    if (appConfig.flags.useWeb3Modal) {
+        return [
+            {
+                name: 'web3modal',
+                label: 'Web3Modal',
+                async getClass() {
+                    return (await import('/src/plugins/web3-wallets/Web3Modal/Web3ModalWallet.js')).Web3ModalWallet;
+                },
+                options: {
+                    defaultChainId: chains.defaultChain.chainId,
+                },
+            },
+        ];
+    }
+
     return [
         {
             name: 'metamask',

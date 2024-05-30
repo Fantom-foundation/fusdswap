@@ -7,6 +7,7 @@ import { nextTick } from 'vue';
 import { useWallet } from '@/modules/wallet/composables/useWallet/useWallet.js';
 import { TEST_ACCOUNT_ADDRESS } from '@/plugins/web3-wallets/test-helpers.js';
 import { i18n } from '@/config/i18n.js';
+import { appConfig } from '@/config/app-config.js';
 
 let wrapper = null;
 let store = null;
@@ -35,20 +36,26 @@ describe('WalletButtonC', () => {
         expect(wrapper.findByTestId('wallet_address').text()).toBe(TEST_ACCOUNT_ADDRESS);
     });
 
-    it('should set wallet name from wallet store', async () => {
-        wrapper = createWrapper();
+    if (!appConfig.flags.useWeb3Modal) {
+        it('should set wallet name from wallet store', async () => {
+            wrapper = createWrapper();
 
-        store.address = TEST_ACCOUNT_ADDRESS;
-        store.walletName = 'software';
-        await nextTick();
+            store.address = TEST_ACCOUNT_ADDRESS;
+            store.walletName = 'software';
+            await nextTick();
 
-        expect(wrapper.findByTestId('wallet_subtext').text()).toBe('software');
-    });
+            expect(wrapper.findByTestId('wallet_subtext').text()).toBe('software');
+        });
+    }
 
     it('should display placeholder text if no address is given', async () => {
         wrapper = createWrapper();
 
-        expect(wrapper.findByTestId('wallet_button').text()).toBe(i18n.t('wallet.walletButton.connectMetamask'));
+        expect(wrapper.findByTestId('wallet_button').text()).toBe(
+            appConfig.flags.useWeb3Modal
+                ? i18n.t('wallet.walletButton.connectWallet')
+                : i18n.t('wallet.walletButton.connectMetamask')
+        );
     });
 
     it('should show WalletButtonPopover on click', async () => {

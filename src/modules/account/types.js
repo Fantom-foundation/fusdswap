@@ -11,6 +11,7 @@
  * @typedef {Object} AccountsStore
  * @property {Account[]} accounts
  * @property {string} activeAccountAddress
+ * @property {boolean} w3mUsed
  */
 
 /**

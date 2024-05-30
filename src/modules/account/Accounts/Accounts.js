@@ -1,6 +1,7 @@
 import { addressesMatch } from '@/utils/account/account.js';
 import { checkObjectProperties } from 'fantom-vue3-components';
 import { i18n } from '@/config/i18n.js';
+import { appConfig } from '@/config/app-config.js';
 
 export class Accounts {
     static storeStateDef = {
@@ -37,6 +38,8 @@ export class Accounts {
         if (this.store.activeAccountAddress) {
             this.setActiveAccountByAddress(this.store.activeAccountAddress);
         }
+
+        this.checkW3M();
     }
 
     setWallet(wallet) {
@@ -54,6 +57,14 @@ export class Accounts {
             throw new Error(`Given store's state should be in the form: ${JSON.stringify(Accounts.storeStateDef)}`);
         } else {
             this.#store = store;
+        }
+    }
+
+    async checkW3M() {
+        if (appConfig.flags.useWeb3Modal && this.#store.activeAccountAddress && !this.#store.w3mUsed) {
+            console.log('???!!!', this.#store.activeAccountAddress, this.#store.w3mUsed);
+            await this.removeAllAccounts();
+            this.#store.w3mUsed = true;
         }
     }
 
@@ -136,6 +147,13 @@ export class Accounts {
     }
 
     async setActiveAccount(account, initWalletArgs = {}) {
+        if (
+            addressesMatch(account.address, this.#wallet?.web3Wallet?.address) &&
+            account.walletName === this.#wallet?.web3Wallet?.name
+        ) {
+            return;
+        }
+
         const wallet = await this.#createWeb3WalletInstance(account);
 
         if (wallet) {
@@ -150,6 +168,10 @@ export class Accounts {
             if (account.walletName === 'ledger') {
                 initArgs.accountId = account.accountId;
                 initArgs.addressId = account.addressId;
+            }
+
+            if (account.connectedWalletName) {
+                initArgs.connectedWalletName = account.connectedWalletName;
             }
 
             await this.#wallet.setWeb3Wallet(wallet, { ...initArgs, address: account.address });
@@ -193,7 +215,7 @@ export class Accounts {
     async #removeActiveWallet({ address, setActiveWallet = false, resetWalletStore = false }) {
         const wallet = this.#wallet;
 
-        if (wallet.isSet() && address === wallet.address) {
+        if (wallet.isSet() && addressesMatch(address, wallet.address)) {
             await wallet.removeWallet(resetWalletStore ? false : this.#store.accounts.length > 0);
             this.#store.activeAccountAddress = '';
 

@@ -99,6 +99,7 @@ const mainConfig = {
     oneAccountMode: true,
     flags: {
         swapTokenSymbol: TOKEN_SYMBOL,
+        useWeb3Modal: true,
     },
     // this object is set by calling `setEnv` function
     env: {

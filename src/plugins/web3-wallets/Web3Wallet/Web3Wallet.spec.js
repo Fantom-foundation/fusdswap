@@ -95,6 +95,7 @@ describe('Web3Wallet', () => {
 
             expect(walletEventsListener).toHaveBeenCalledWith({
                 name: 'disconnected',
+                address: '',
                 waitFor: [],
             });
         });

@@ -56,7 +56,7 @@ export function WFTM_TOKEN() {
 }
 
 export const DAI_SWAP_CONTRACT = '0xBca5E7bCE998e084e06a37d2Cfa89980941D5fDD';
-export const USDC_SWAP_CONTRACT = '0xBca5E7bCE998e084e06a37d2Cfa89980941D5fDD';
+export const USDCe_SWAP_CONTRACT = '0x37b9F8d5EE0ED621153cCE88e9B466f10011e6aA';
 
 export function getTokenConfig() {
     const swapTokenSymbol = appConfig.flags.swapTokenSymbol;
@@ -71,7 +71,7 @@ export function getTokenConfig() {
         config.token = DAI_TOKEN();
         config.swapTokenForFUsd = swapTokenForFUsd;
     } else if (swapTokenSymbol === 'USDC.e') {
-        config.swapContract = USDC_SWAP_CONTRACT;
+        config.swapContract = USDCe_SWAP_CONTRACT;
         config.token = USDCe_TOKEN();
         config.swapTokenForFUsd = swapTokenForFUsd;
     }

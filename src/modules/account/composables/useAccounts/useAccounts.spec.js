@@ -1,6 +1,7 @@
 import { withSetup } from 'fantom-vue3-components/src/test/utils.js';
 import { useAccounts } from './useAccounts.js';
 import { Accounts } from '@/modules/account/Accounts/Accounts.js';
+import { appConfig } from '@/config/app-config.js';
 
 describe('useAccounts', () => {
     it('should return instance of Accounts class', () => {
@@ -20,6 +21,8 @@ describe('useAccounts', () => {
     });
 
     it('should register web3 wallets', () => {
-        expect(Accounts.isWeb3WalletRegistered('metamask')).toBe(true);
+        const walletName = appConfig.flags.useWeb3Modal ? 'web3modal' : 'metamask';
+
+        expect(Accounts.isWeb3WalletRegistered(walletName)).toBe(true);
     });
 });
